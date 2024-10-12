@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: NAT Gateway Module
+
+Resources:
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !Ref EIP
+      SubnetId: !Ref PublicSubnet
+
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
