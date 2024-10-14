@@ -20,7 +20,7 @@ Resources:
     Properties: 
       Tags:
         - Key: Name
-          Value: MyInternetGateway
+          Value: Group16InternetGateway
 
   # Attach Internet Gateway to VPC
   AttachInternetGateway:
@@ -34,7 +34,10 @@ Outputs:
   VPCId:
     Description: ID of the VPC
     Value: !Ref Group16VPC
-
+    Export:
+      Name: Group16VPCId
   InternetGatewayId:
     Description: ID of the Internet Gateway
-    Value: !Ref InternetGateway
+    Value: !Ref Group16InternetGateway
+    Export:
+      Name: Group16InternetGatewayId
