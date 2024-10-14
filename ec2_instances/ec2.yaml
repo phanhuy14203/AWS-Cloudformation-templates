@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create EC2 Instances in Public and Private Subnets
+
+Resources:
+  # Public EC2 Instance
+  PublicEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro  
+      KeyName: Group16Key  
+      ImageId: ami-0d081196e3df05f4d 
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !ImportValue Group16PublicSubnetId  
+          GroupSet:
+            - !ImportValue Group16PublicSecurityGroupId  
+
+  # Private EC2 Instance
+  PrivateEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro  
+      KeyName: Group16Key 
+      ImageId: ami-0d081196e3df05f4d  
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 0
+          SubnetId: !ImportValue Group16PrivateSubnetId  
+          GroupSet:
+            - !ImportValue Group16PrivateSecurityGroupId  
+
+Outputs:
+  PublicEC2InstanceId:
+    Description: ID of the Public EC2 Instance
+    Value: !Ref PublicEC2Instance
+    Export:
+      Name: Group16PublicEC2InstanceId
+
+  PrivateEC2InstanceId:
+    Description: ID of the Private EC2 Instance
+    Value: !Ref PrivateEC2Instance
+    Export:
+      Name: Group16PrivateEC2InstanceId
