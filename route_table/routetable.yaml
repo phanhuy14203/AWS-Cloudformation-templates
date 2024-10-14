@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Route Tables for Public and Private Subnets
+
+Resources:
+  # Create Public Route Table
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !ImportValue Group16VPCId  # Nhập giá trị VPC từ file khác
+      Tags:
+        - Key: Name
+          Value: PublicRouteTable
+
+  # Create Route for Public Route Table to Internet Gateway
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'  # Tất cả lưu lượng Internet
+      GatewayId: !ImportValue Group16InternetGatewayId  # Nhập giá trị Internet Gateway từ file khác
+
+  # Create Private Route Table
+  PrivateRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !ImportValue Group16VPCId  # Nhập giá trị VPC từ file khác
+      Tags:
+        - Key: Name
+          Value: PrivateRouteTable
+
+  # Create Route for Private Route Table to NAT Gateway
+  PrivateRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'  # Tất cả lưu lượng Internet
+      NatGatewayId: !ImportValue Group16NatGatewayId  # Nhập giá trị NAT Gateway từ file khác
+
+  # Associate Public Route Table with Public Subnet
+  PublicSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !ImportValue Group16PublicSubnetId  # Nhập giá trị Public Subnet từ file khác
+      RouteTableId: !Ref PublicRouteTable
+
+  # Associate Private Route Table with Private Subnet
+  PrivateSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !ImportValue Group16PrivateSubnetId  # Nhập giá trị Private Subnet từ file khác
+      RouteTableId: !Ref PrivateRouteTable
+
+Outputs:
+  PublicRouteTableId:
+    Description: ID of the Public Route Table
+    Value: !Ref PublicRouteTable
+    Export:
+      Name: Group16PublicRouteTableId
+
+  PrivateRouteTableId:
+    Description: ID of the Private Route Table
+    Value: !Ref PrivateRouteTable
+    Export:
+      Name: Group16PrivateRouteTableId
