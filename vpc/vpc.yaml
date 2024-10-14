@@ -51,7 +51,21 @@ Resources:
     Properties:
       VpcId: !Ref Group16VPC
       InternetGatewayId: !Ref InternetGateway
-
+  DefaultSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Default Security Group with Default Rules
+      VpcId: !ImportValue Group16VPCId  
+      SecurityGroupIngress:
+        - IpProtocol: '-1'  
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: '0.0.0.0/0'  
+      SecurityGroupEgress:
+        - IpProtocol: '-1'  
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: '0.0.0.0/0'  
 Outputs:
   VPCId:
     Description: ID of the VPC
@@ -76,3 +90,8 @@ Outputs:
     Value: !Ref PrivateSubnet
     Export:
       Name: Group16PrivateSubnetId
+  DefaultSecurityGroupId:
+    Description: ID of the Custom Security Group
+    Value: !Ref DefaultSecurityGroup
+    Export:
+      Name: Group16DefaultSecurityGroupId
