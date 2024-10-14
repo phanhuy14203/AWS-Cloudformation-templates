@@ -13,6 +13,29 @@ Resources:
         - Key: Name
           Value: Group16VPC
 
+  # Create Public Subnet
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Group16VPC
+      CidrBlock: '10.0.1.0/24'
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: PublicSubnet
+
+  # Create Private Subnet
+  PrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref Group16VPC
+      CidrBlock: '10.0.2.0/24'
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet
 
   # Create Internet Gateway
   InternetGateway:
@@ -20,7 +43,7 @@ Resources:
     Properties: 
       Tags:
         - Key: Name
-          Value: Group16InternetGateway
+          Value: MyInternetGateway
 
   # Attach Internet Gateway to VPC
   AttachInternetGateway:
@@ -28,7 +51,6 @@ Resources:
     Properties:
       VpcId: !Ref Group16VPC
       InternetGatewayId: !Ref InternetGateway
-
 
 Outputs:
   VPCId:
@@ -41,3 +63,14 @@ Outputs:
     Value: !Ref Group16InternetGateway
     Export:
       Name: Group16InternetGatewayId
+
+  PublicSubnetId:
+    Description: ID of the Public Subnet
+    Value: !Ref PublicSubnet
+    Export:
+      Name: Group16PublicSubnetId
+  PrivateSubnetId:
+    Description: ID of the Private Subnet
+    Value: !Ref PrivateSubnet
+    Export:
+      Name: Group16PrivateSubnetId
