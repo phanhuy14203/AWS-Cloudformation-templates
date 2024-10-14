@@ -1,25 +1,44 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Security Groups Module
+Description: Create Security Groups for Public and Private EC2 Instances
 
 Resources:
+  # Public EC2 Security Group
   PublicSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: Allow SSH from anywhere
-      VpcId: !Ref VPCId
+      GroupDescription: Allow SSH access from specific IP for Public EC2 instances
+      VpcId: !ImportValue Group16VPCId 
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 0.0.0.0/0
+          CidrIp: '104.28.205.71/32'  
 
+  # Private EC2 Security Group
   PrivateSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: Allow SSH from Public Security Group
-      VpcId: !Ref VPCId
+      GroupDescription: Allow access from Public EC2 instances to Private EC2 instances
+      VpcId: !ImportValue Group16VPCId 
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          SourceSecurityGroupId: !Ref PublicSecurityGroup
+          SourceSecurityGroupId: !Ref PublicSecurityGroup  
+        - IpProtocol: tcp
+          FromPort: 80  
+          ToPort: 80
+          SourceSecurityGroupId: !Ref PublicSecurityGroup  
+
+Outputs:
+  PublicSecurityGroupId:
+    Description: ID of the Public Security Group
+    Value: !Ref PublicSecurityGroup
+    Export:
+      Name: Group16PublicSecurityGroupId
+
+  PrivateSecurityGroupId:
+    Description: ID of the Private Security Group
+    Value: !Ref PrivateSecurityGroup
+    Export:
+      Name: Group16PrivateSecurityGroupId
