@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Create EC2 Instances in Public and Private Subnets
 
 Resources:
+  # 2 Instance
   # Public EC2 Instance
   PublicEC2Instance:
     Type: 'AWS::EC2::Instance'
