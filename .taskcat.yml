@@ -1,0 +1,18 @@
+project:
+  name: my-cloudformation-project
+  regions:
+    - us-west-2
+tests:
+  vpc-test:
+    template: vpc.yaml
+  natgateway-test:
+    template: natgateway.yaml
+  routetable-test:
+    template: routetable.yaml
+  sg-test:
+    template: securitygroups.yaml
+  ec2-test:
+    template: ec2.yaml
+    parameters:
+      KeyName: Group16Key
+      InstanceType: t2.micro
