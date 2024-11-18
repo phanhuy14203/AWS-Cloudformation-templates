@@ -12,7 +12,7 @@ phases:
       - echo "Running cfn-lint on CloudFormation templates..." 
       - cfn-lint --template vpc.yaml ec2.yaml natgateway.yaml routetable.yaml securitygroups.yaml -i W
       - echo "Running TaskCat tests..."
-      - taskcat test run --input-file taskcat.yml
+      - taskcat test run
 artifacts:
   files:
     - '**/*'
